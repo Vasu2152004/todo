@@ -1,22 +1,11 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/vendor
 .env
 .env.backup
 .env.production
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
-/.fleet
-/.idea
-/.vscode
-/public/build
-
-# Note: composer.lock should be committed for Wasmer deployment
-# Uncomment the line below ONLY if you want to ignore it (not recommended)
-# composer.lock
+*.log
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.swp
+*.swo
+*~

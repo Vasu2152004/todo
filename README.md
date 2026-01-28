@@ -1,6 +1,6 @@
-# Laravel Todo List Application
+# Simple PHP Todo Application
 
-A production-ready Laravel todo list application with Bootstrap UI, featuring full CRUD operations, filtering, sorting, and a modern, responsive design.
+A clean, simple todo list application built with pure PHP (no framework), MySQL, and Bootstrap 5.
 
 ## Features
 
@@ -9,358 +9,205 @@ A production-ready Laravel todo list application with Bootstrap UI, featuring fu
 - ✅ Priority levels (Low, Medium, High)
 - ✅ Due date tracking with overdue indicators
 - ✅ Filter todos (All, Active, Completed)
-- ✅ Sort todos by date, priority, or due date
 - ✅ Responsive Bootstrap 5 UI
-- ✅ Form validation and error handling
-- ✅ Flash messages for user feedback
-- ✅ Production-ready configuration
+- ✅ RESTful API
+- ✅ Production-ready
 
 ## Requirements
 
 - PHP >= 8.1
-- Composer
-- Node.js >= 18.x and npm
-- MySQL/MariaDB
+- MySQL >= 5.7 or MariaDB >= 10.3
 - Web server (Apache/Nginx) or PHP built-in server
 
 ## Installation
 
-### 1. Clone or Download the Project
+### 1. Clone or Download
 
 ```bash
-cd /path/to/your/project
+git clone <your-repo-url>
+cd todo-app
 ```
 
-### 2. Install Dependencies
+### 2. Database Setup
+
+Create the database and tables:
 
 ```bash
-# Install PHP dependencies
-composer install
-
-# Install Node.js dependencies
-npm install
+mysql -u root -p < database/schema.sql
 ```
 
-### 3. Environment Configuration
+Or manually:
 
-Copy the `.env.example` file to `.env`:
+```sql
+CREATE DATABASE todo_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE todo_app;
+-- Then run the SQL from database/schema.sql
+```
+
+### 3. Configure Environment
+
+Copy `.env.example` to `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit the `.env` file and configure your database settings:
+Edit `.env` with your database credentials:
 
 ```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=todo_app
 DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
 
-### 4. Generate Application Key
+### 4. Start Development Server
 
 ```bash
-php artisan key:generate
+php -S localhost:8000
 ```
 
-### 5. Create Database
-
-Create a MySQL database:
-
-```sql
-CREATE DATABASE todo_app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-### 6. Run Migrations
-
-```bash
-php artisan migrate
-```
-
-### 7. (Optional) Seed Sample Data
-
-```bash
-php artisan db:seed
-```
-
-This will create 5 sample todos for testing.
-
-### 8. Set Permissions
-
-Ensure storage and cache directories are writable:
-
-```bash
-# Linux/Mac
-chmod -R 775 storage bootstrap/cache
-
-# Windows (if needed)
-icacls storage /grant Users:F /T
-icacls bootstrap\cache /grant Users:F /T
-```
-
-### 9. Build Assets
-
-For development (with hot reload):
-```bash
-npm run dev
-```
-
-For production:
-```bash
-npm run build
-```
-
-### 10. Start Development Server
-
-In one terminal, start Vite dev server:
-```bash
-npm run dev
-```
-
-In another terminal, start Laravel server:
-```bash
-php artisan serve
-```
-
-The application will be available at `http://localhost:8000`
-
-## Production Deployment
-
-> **Note:** For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
-
-### Quick Answer: Pre-Deployment Commands
-
-**Yes, you typically need to run these commands BEFORE deployment:**
-
-```bash
-# 1. Install production dependencies (optimized)
-composer install --optimize-autoloader --no-dev
-
-# 2. Generate application key (if not done)
-php artisan key:generate
-
-# 3. Optimize for production
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-```
-
-**However**, some platforms (Laravel Forge, Railway, Render) handle this automatically - check [DEPLOYMENT.md](DEPLOYMENT.md) for platform-specific instructions.
-
-### 1. Environment Configuration
-
-Update `.env` for production:
-
-```env
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://yourdomain.com
-LOG_LEVEL=error
-```
-
-### 2. Build Assets for Production
-
-```bash
-# Build optimized assets
-npm run build
-```
-
-### 3. Optimize Application
-
-```bash
-# Cache configuration
-php artisan config:cache
-
-# Cache routes
-php artisan route:cache
-
-# Cache views
-php artisan view:cache
-
-# Optimize autoloader
-composer install --optimize-autoloader --no-dev
-```
-
-### 3. Web Server Configuration
-
-#### Apache (.htaccess)
-
-The `.htaccess` file in the `public` directory should handle URL rewriting. Ensure `mod_rewrite` is enabled.
-
-#### Nginx
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-    root /path/to/project/public;
-
-    add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-Content-Type-Options "nosniff";
-
-    index index.php;
-
-    charset utf-8;
-
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    error_page 404 /index.php;
-
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-}
-```
+Visit `http://localhost:8000` in your browser.
 
 ## Project Structure
 
 ```
-temp-project/
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   └── TodoController.php
-│   │   └── Requests/
-│   │       └── TodoRequest.php
-│   ├── Models/
-│   │   └── Todo.php
-│   └── Providers/
-│       └── AppServiceProvider.php
-├── config/
-│   ├── app.php
-│   ├── database.php
-│   └── ...
-├── database/
-│   ├── migrations/
-│   │   ├── 2024_01_28_000000_create_cache_table.php
-│   │   ├── 2024_01_28_000001_create_todos_table.php
-│   │   └── 2024_01_28_000002_create_sessions_table.php
-│   └── seeders/
-│       ├── DatabaseSeeder.php
-│       └── TodoSeeder.php
-├── public/
+todo-app/
+├── api/
+│   └── todos.php          # REST API endpoints
+├── assets/
 │   ├── css/
-│   │   └── app.css
-│   ├── js/
-│   │   └── app.js
-│   └── index.php
-├── resources/
-│   └── views/
-│       ├── layouts/
-│       │   └── app.blade.php
-│       ├── components/
-│       │   └── flash-messages.blade.php
-│       └── todos/
-│           └── index.blade.php
-├── routes/
-│   └── web.php
-├── .env
-├── .env.example
-├── composer.json
-└── README.md
+│   │   └── style.css      # Custom styles
+│   └── js/
+│       └── app.js          # Frontend JavaScript
+├── config/
+│   └── database.php       # Database connection class
+├── database/
+│   └── schema.sql         # Database schema
+├── index.php              # Main entry point
+├── .htaccess              # Apache rewrite rules
+├── .env                   # Environment variables
+├── .env.example           # Environment template
+├── app.yaml               # Wasmer Edge config
+└── wasmer.toml            # Wasmer package config
 ```
 
-## Usage
+## API Endpoints
 
-### Creating a Todo
+### Get All Todos
+```
+GET /api/todos.php?action=list&filter=all
+```
 
-1. Click the "Add New Todo" button
-2. Fill in the title (required)
-3. Optionally add description, priority, and due date
-4. Click "Create Todo"
+Filters: `all`, `active`, `completed`
 
-### Editing a Todo
+### Get Single Todo
+```
+GET /api/todos.php?action=get&id=1
+```
 
-1. Click the edit (pencil) icon on any todo card
-2. Modify the fields
-3. Click "Update Todo"
+### Create Todo
+```
+POST /api/todos.php?action=create
+Content-Type: application/json
 
-### Completing a Todo
+{
+  "title": "My Todo",
+  "description": "Description here",
+  "priority": "medium",
+  "due_date": "2024-12-31"
+}
+```
 
-1. Check the checkbox next to the todo title
-2. The todo will be marked as completed automatically
+### Update Todo
+```
+PUT /api/todos.php?action=update
+Content-Type: application/json
 
-### Deleting a Todo
+{
+  "id": 1,
+  "title": "Updated Todo",
+  "description": "Updated description",
+  "priority": "high",
+  "due_date": "2024-12-31"
+}
+```
 
-1. Click the delete (trash) icon on any todo card
-2. Confirm the deletion
+### Toggle Todo Completion
+```
+POST /api/todos.php?action=toggle
+Content-Type: application/json
 
-### Filtering Todos
+{
+  "id": 1
+}
+```
 
-Use the filter dropdown to view:
-- All Todos
-- Active (incomplete) todos
-- Completed todos
+### Delete Todo
+```
+DELETE /api/todos.php?action=delete&id=1
+```
 
-### Sorting Todos
+## Deployment
 
-Use the sort dropdown to organize todos by:
-- Date Created
-- Due Date
-- Priority
+### Wasmer Edge
+
+1. Ensure `app.yaml` is in repository root
+2. Set environment variables in Wasmer Edge dashboard:
+   - `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+   - (Or use Wasmer Edge's auto-provisioned database)
+3. Deploy from GitHub repository
+4. Run database migration:
+   ```bash
+   mysql -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE < database/schema.sql
+   ```
+
+### Traditional Server
+
+1. Upload files to web server
+2. Configure database in `.env`
+3. Run `database/schema.sql` to create tables
+4. Set proper file permissions
+5. Configure web server (Apache/Nginx)
 
 ## Database Schema
 
-### todos table
+```sql
+CREATE TABLE todos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    completed TINYINT(1) DEFAULT 0,
+    priority ENUM('low', 'medium', 'high') DEFAULT 'medium',
+    due_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | bigint | Primary key |
-| title | string(255) | Todo title (required) |
-| description | text | Todo description (optional) |
-| completed | boolean | Completion status (default: false) |
-| priority | enum | Priority level: low, medium, high (default: medium) |
-| due_date | date | Due date (optional) |
-| created_at | timestamp | Creation timestamp |
-| updated_at | timestamp | Last update timestamp |
+## Security Notes
 
-## Security Considerations
-
-- CSRF protection enabled on all forms
+- Uses PDO prepared statements to prevent SQL injection
 - Input validation and sanitization
-- SQL injection protection via Eloquent ORM
-- XSS protection via Blade templating
+- CSRF protection recommended for production
 - Environment variables for sensitive data
-- Production error handling (no stack traces)
+- `.htaccess` protects sensitive files
 
-## Troubleshooting
+## Browser Support
 
-### Database Connection Error
-
-- Verify database credentials in `.env`
-- Ensure MySQL service is running
-- Check database exists and user has permissions
-
-### 500 Error
-
-- Check `storage/logs/laravel.log` for errors
-- Verify file permissions on `storage/` and `bootstrap/cache/`
-- Ensure `.env` file exists and `APP_KEY` is set
-
-### Styles/JavaScript Not Loading
-
-- Clear browser cache
-- Verify `public/css/app.css` and `public/js/app.js` exist
-- Check web server configuration for static file serving
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT License
 
 ## Support
 
-For issues and questions, please check the Laravel documentation at [https://laravel.com/docs](https://laravel.com/docs).
+For issues, please check:
+- PHP error logs
+- Browser console for JavaScript errors
+- Database connection settings in `.env`

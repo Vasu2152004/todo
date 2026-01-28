@@ -1,6 +1,0 @@
-{
-  "package_manager": "pnpm",
-  "build_command": "pnpm run build",
-  "use_composer": true,
-  "composer_build_script": "post-update-cmd"
-}

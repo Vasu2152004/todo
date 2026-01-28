@@ -1,16 +1,10 @@
 [package]
 name = "todo"
 version = "1.0.0"
-description = "Laravel Todo List Application"
-
-[dependencies]
+description = "Simple PHP Todo Application"
 
 [build]
-commands = [
-    "composer install --optimize-autoloader --no-dev --no-interaction",
-    "pnpm install",
-    "pnpm run build"
-]
+commands = []
 
 [run]
-command = "php artisan serve --host=0.0.0.0 --port=8000"
+command = "php -S 0.0.0.0:8000 -t ."
