@@ -1,3 +1,5 @@
+
+kind: wasmer.io/App.v0
 name: todo
 description: Simple PHP Todo Application
 
