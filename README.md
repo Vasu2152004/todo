@@ -19,6 +19,7 @@ A production-ready Laravel todo list application with Bootstrap UI, featuring fu
 
 - PHP >= 8.1
 - Composer
+- Node.js >= 18.x and npm
 - MySQL/MariaDB
 - Web server (Apache/Nginx) or PHP built-in server
 
@@ -33,7 +34,11 @@ cd /path/to/your/project
 ### 2. Install Dependencies
 
 ```bash
+# Install PHP dependencies
 composer install
+
+# Install Node.js dependencies
+npm install
 ```
 
 ### 3. Environment Configuration
@@ -96,8 +101,26 @@ icacls storage /grant Users:F /T
 icacls bootstrap\cache /grant Users:F /T
 ```
 
-### 9. Start Development Server
+### 9. Build Assets
 
+For development (with hot reload):
+```bash
+npm run dev
+```
+
+For production:
+```bash
+npm run build
+```
+
+### 10. Start Development Server
+
+In one terminal, start Vite dev server:
+```bash
+npm run dev
+```
+
+In another terminal, start Laravel server:
 ```bash
 php artisan serve
 ```
@@ -138,7 +161,14 @@ APP_URL=https://yourdomain.com
 LOG_LEVEL=error
 ```
 
-### 2. Optimize Application
+### 2. Build Assets for Production
+
+```bash
+# Build optimized assets
+npm run build
+```
+
+### 3. Optimize Application
 
 ```bash
 # Cache configuration

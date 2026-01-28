@@ -37,17 +37,23 @@ You have two options:
 Run these commands on your local machine before uploading:
 
 ```bash
-# 1. Install dependencies
+# 1. Install PHP dependencies
 composer install --optimize-autoloader --no-dev
 
-# 2. Generate application key (if not already done)
+# 2. Install Node.js dependencies
+npm install
+
+# 3. Build assets for production
+npm run build
+
+# 4. Generate application key (if not already done)
 php artisan key:generate
 
-# 3. Copy .env.example to .env and configure
+# 5. Copy .env.example to .env and configure
 cp .env.example .env
 # Edit .env with production settings
 
-# 4. Optimize for production
+# 6. Optimize for production
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -63,6 +69,8 @@ If your hosting platform supports SSH/command line:
 ```bash
 # After uploading files, SSH into server and run:
 composer install --optimize-autoloader --no-dev
+npm install
+npm run build
 php artisan key:generate
 php artisan config:cache
 php artisan route:cache
@@ -75,15 +83,18 @@ php artisan migrate
 ### Laravel Forge
 
 1. Connect your Git repository
-2. Configure server (PHP 8.1+, MySQL)
+2. Configure server (PHP 8.1+, MySQL, Node.js)
 3. Set environment variables in Forge dashboard
-4. Forge automatically runs:
+4. Add build script in Forge:
+   - `npm install && npm run build`
+5. Forge automatically runs:
    - `composer install --no-dev`
+   - `npm install && npm run build` (if configured)
    - `php artisan migrate --force`
    - `php artisan config:cache`
    - `php artisan route:cache`
 
-**No local commands needed** - Forge handles everything!
+**Note:** You may need to configure Node.js build step in Forge deployment script.
 
 ### Heroku
 
@@ -92,17 +103,23 @@ php artisan migrate
    ```
    web: vendor/bin/heroku-php-apache2 public/
    ```
-3. Push to Heroku:
+3. Add Node.js buildpack:
+   ```bash
+   heroku buildpacks:add heroku/nodejs
+   heroku buildpacks:add heroku/php
+   ```
+4. Push to Heroku:
    ```bash
    git push heroku main
    ```
-4. Set environment variables:
+   Heroku will automatically run `npm install` and `npm run build`
+5. Set environment variables:
    ```bash
    heroku config:set APP_KEY=$(php artisan key:generate --show)
    heroku config:set APP_ENV=production
    heroku config:set APP_DEBUG=false
    ```
-5. Run migrations:
+6. Run migrations:
    ```bash
    heroku run php artisan migrate
    ```
@@ -111,16 +128,21 @@ php artisan migrate
 
 1. Connect GitHub repository
 2. Set environment variables in Railway dashboard
-3. Railway automatically detects Laravel and runs:
+3. Configure build command:
+   - `npm install && npm run build && composer install`
+4. Configure start command:
+   - `php artisan serve --host=0.0.0.0 --port=$PORT`
+5. Railway automatically runs:
+   - `npm install && npm run build`
    - `composer install`
    - `php artisan migrate`
-4. Set `APP_KEY` in environment variables
+6. Set `APP_KEY` in environment variables
 
 ### Render
 
 1. Connect Git repository
 2. Select "Web Service"
-3. Build command: `composer install --optimize-autoloader --no-dev`
+3. Build command: `npm install && npm run build && composer install --optimize-autoloader --no-dev`
 4. Start command: `php artisan serve`
 5. Set environment variables
 6. Run migrations via Render shell
@@ -141,8 +163,14 @@ php artisan migrate
 
 3. **On server (SSH):**
    ```bash
-   # Install dependencies
+   # Install PHP dependencies
    composer install --optimize-autoloader --no-dev
+   
+   # Install Node.js dependencies
+   npm install
+   
+   # Build assets
+   npm run build
    
    # Set permissions
    chmod -R 775 storage bootstrap/cache
@@ -256,4 +284,8 @@ Add to `.gitignore` (already included):
 - **Traditional VPS**: Yes - run `composer install` and `php artisan key:generate` locally OR on server
 - **Shared Hosting**: Yes - run locally, then upload files
 
-**Best Practice:** Always run `composer install --optimize-autoloader --no-dev` before deployment to ensure all dependencies are included, unless your platform handles Composer automatically.
+**Best Practice:** Always run these commands before deployment:
+- `composer install --optimize-autoloader --no-dev` (PHP dependencies)
+- `npm install && npm run build` (Build assets)
+
+Unless your platform handles these automatically (like Laravel Forge, Railway, or Render).
