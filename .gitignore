@@ -16,3 +16,7 @@ yarn-error.log
 /.idea
 /.vscode
 /public/build
+
+# Note: composer.lock should be committed for Wasmer deployment
+# Uncomment the line below ONLY if you want to ignore it (not recommended)
+# composer.lock
